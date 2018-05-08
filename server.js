@@ -1,8 +1,13 @@
-// database is let instead of const to allow us to modify it in test.js
-let database = {
-  users: {},
-  articles: {},
-  nextArticleId: 1
+=  nextArticleId: 1,
+  comment: {
+    id: 1,
+    body: '',
+    usernmae:'',
+    artileId: 1,
+    upvotedBy: [],
+    downvotedBy: []
+  },
+  nextCommentId =1
 };
 
 const routes = {
@@ -26,8 +31,21 @@ const routes = {
   },
   '/articles/:id/downvote': {
     'PUT': downvoteArticle
-  }
+  },
+  '/comments': {'POST': getOrCreateComment},
 };
+
+function getOrCreateComment(url, comment){
+  if (!comment.body || getUser(url,'GET') !== 200 || getAricle(url, 'GET') !== 200){
+    return  400;
+  } else {
+    let newComment = new database.comment(); 
+  database.comment[extCommentId].body = comment;
+  return 201;
+  }                                   
+}
+
+
 
 function getUser(url, request) {
   const username = url.split('/').filter(segment => segment)[1];
