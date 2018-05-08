@@ -1,9 +1,13 @@
-=  nextArticleId: 1,
+// database is let instead of const to allow us to modify it in test.js
+let database = {
+  users: {},
+  articles: {},
+  nextArticleId: 1,
   comment: {
     id: 1,
     body: '',
-    usernmae:'',
-    artileId: 1,
+    username:'',
+    articleId: 1,
     upvotedBy: [],
     downvotedBy: []
   },
@@ -33,18 +37,37 @@ const routes = {
     'PUT': downvoteArticle
   },
   '/comments': {'POST': getOrCreateComment},
+  '/comments/:id': {'PUT':,
+                    'DELETE':,
+                  },
+  '/comments/:id/upvote':{'PUT':},
+  '/comments/:id/downvote':{'PUT':}
 };
 
-function getOrCreateComment(url, comment){
-  if (!comment.body || getUser(url,'GET') !== 200 || getAricle(url, 'GET') !== 200){
-    return  400;
-  } else {
-    let newComment = new database.comment(); 
-  database.comment[extCommentId].body = comment;
-  return 201;
-  }                                   
-}
+function createComment(url, request){
+  const requestComment = request.body && request.body.comment;
+  const response = {};
 
+  if (requestComment && requestComment.username && requestComment.articleId){
+    const comment = {
+      id: database.nextCommentId++,
+      body: requestComment,
+      username: requestComment.username,
+      articleId: requestComment.articleId,
+      upvotedBy: [],
+      downvotedBy: []
+    };
+
+    database.comments[comment.id] = comment;
+    database.users[comment.username].commentIds.push(comment.id);
+
+    response.body = {comment: comment};
+    response.status = 201;
+  } else {
+    response.status = 400;
+  }
+  return response;
+}
 
 
 function getUser(url, request) {
