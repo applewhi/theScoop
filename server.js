@@ -54,7 +54,7 @@ function createComment(url, request){
     database.comments[comment.id] = comment;
     database.users[comment.username].commentIds.push(comment.id);
 
-    response.body = {comment: comment};
+    response.body = {comment: requestComment};
     response.status = 201;
   } else {
     response.status = 400;
@@ -90,8 +90,7 @@ function deleteComment(url, request) {
 
   if (savedComment) {
     savedComment = null;
-    const savedCommentIds = database.users[request.body.username].commentIds[];
-    const user.commentIds[element]
+    const savedCommentIds = database.users[request.body.username].commentIds;
 
     const userCommentsIds = database.users[savedComment.username].commentIds;
     userCommentsIds.splice(userComments.indexof(id), 1);
@@ -110,7 +109,7 @@ function deleteComment(url, request) {
 function updateUpVote(url, request) {
   const id = url.split('/').filter(segment => segment)[1];
   const requestComment = request.body && request.body.comment;
-  const = {};
+  const response = {};
 
   if (id && requestComment.username && requestComment[id]){
     if (!requestComment.upvoteBy.indexOf(requestComment.username)){
@@ -120,7 +119,6 @@ function updateUpVote(url, request) {
     if (downVoteIndex){
       requestComment.downvoteBy.splice(downVoteIndex,1)
     }
-  }
     response.body.comment = {comment: requestComment};
     response.status = 200;
   } else {
