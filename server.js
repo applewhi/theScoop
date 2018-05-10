@@ -96,14 +96,11 @@ function updateComment(url, request) {
 
 //---------------------DELETE COMMENT FUNCTION--------------------
 function deleteComment(url, request) {
-  const id = url.split('/').filter(segment => segment)[1];
+  const id = Number(url.split('/').filter(segment => segment)[1]);
   let savedComment = database.comments[id];
   const response = {};
 
-  if (!request.body || !request.body.comment) {
-    response.status = 400;
-  }
-  else if (savedComment) {
+if (savedComment) {
     savedComment = null;
     const savedCommentIds = database.users[request.body.username].commentIds;
 
@@ -114,10 +111,11 @@ function deleteComment(url, request) {
 
     response.body = {comment: savedComment};
     response.status = 204;
-    }
-   else {
+  } else if (!savedComment) {
     response.status = 404;
-    }
+  } else {
+    response.status = 400;
+  }
   return response;
 }
 
