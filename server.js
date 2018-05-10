@@ -44,7 +44,6 @@ function createComment(url, request){
   /* function to pretty-print objects...
   const pp = obj => JSON.stringify(obj, null, 2);
   console.log(`>>>>>>>> requestComment value: ${pp(requestComment)}`);
-
   console.log(`>>>>>>>> requestComment value: ${requestComment}`);
   console.log(`>>>>>>>> requestComment.username value: ${requestComment.username}`);
   console.log(`>>>>>>>> requestComment.articleId value: ${requestComment.articleId}`);*/
