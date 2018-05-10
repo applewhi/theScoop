@@ -117,16 +117,22 @@ if (savedComment) {
   return response;
 }
 
-function upvoteComment(url, request) {
-  const id = url.split('/').filter(segment => segment)[1];
-  const requestUser = request.body && request.body.username;
-  const requestComment = database.comments[id]
-  const response = {};
-  const downVotedIndex = requestComment.downvotedBy.indexOf(requestUser);
+  function upvoteComment(url, request) {
+    const id = Number(url.split('/').filter(segment => segment)[1]);
+    const requestUser = request.body && request.body.username;
+    const requestComment = database.comments[id]
+    const response = {};
+    const downVotedIndex = requestComment.downvotedBy.indexOf(requestUser);
 
-  /* upvote(requestComment,requestUser.username) */
+    if (requestComment && database.users[requestUser]){
+      const savedComment = upvote(requestComment,requestUser.username);
+      response.body.savedComment;
+      response.status = 200;
+    }
+    return response;
+ }
 
-  if (database.comment[id] && requestUser && database.users[requestUser]){
+  /*if (database.comment[id] && requestUser && database.users[requestUser]){
     if (requestComment.upvotedBy.indexOf(requestUser) === -1) {
       requestComment.upvotedBy.push(requestUser);
       if (downVotedIndex >= 0) {
@@ -134,16 +140,15 @@ function upvoteComment(url, request) {
       }
       response.status = 200;
       response.body.requestComment = {comment: requestComment};
-      /* response.body.requestComment = {comment: upvote(requestComment,requestUser.username)} */
     }
   } else {
     response.status = 400;
   }
   return response;
-}
+}*/
 
 function downvoteComment(url, request) {
-  const id = url.split('/').filter(segment => segment)[1];
+  const id = Number(url.split('/').filter(segment => segment)[1]);
   const requestUser = request.body && request.body.username;
   const requestComment = database.comments[id]
   const response = {};
