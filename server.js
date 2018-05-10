@@ -82,12 +82,8 @@ function updateComment(url, request) {
 
   if (requestComment && savedComment) {
     savedComment.body = requestComment.body || savedComment.body;
-    savedComment.url = requestComment.url || savedComment.url;
 
     response.body = {comment: savedComment};
-    response.status = 200;
-  }
-  else if (!id || !requestComment) {
     response.status = 200;
   } else if (!savedComment) {
     response.status = 404;
