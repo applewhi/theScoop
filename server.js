@@ -44,6 +44,7 @@ function createComment(url, request){
   /* function to pretty-print objects...
   const pp = obj => JSON.stringify(obj, null, 2);
   console.log(`>>>>>>>> requestComment value: ${pp(requestComment)}`);
+
   console.log(`>>>>>>>> requestComment value: ${requestComment}`);
   console.log(`>>>>>>>> requestComment.username value: ${requestComment.username}`);
   console.log(`>>>>>>>> requestComment.articleId value: ${requestComment.articleId}`);*/
@@ -79,19 +80,19 @@ function updateComment(url, request) {
   const requestComment = request.body && request.body.comment;
   const response = {};
 
-  if (!requestComment) {
-    response.status = 400;
-  }
-  else if (!id || !requestComment) {
-    response.statust = 200;
-  } else if (!savedComment) {
-    response.status = 404;
-  } else {
+  if (requestComment && savedComment) {
     savedComment.body = requestComment.body || savedComment.body;
     savedComment.url = requestComment.url || savedComment.url;
 
     response.body = {comment: savedComment};
+    response.status = 200;
+  }
+  else if (!id || !requestComment) {
+    response.status = 200;
+  } else if (!savedComment) {
     response.status = 404;
+  } else {
+    response.status = 400;
   }
 
   return response;
@@ -288,7 +289,7 @@ function updateArticle(url, request) {
   const requestArticle = request.body && request.body.article;
   const response = {};
 
-  if (!id || !requestArticle || ) {
+  if (!id || !requestArticle) {
     response.status = 400;
   } else if (!savedArticle) {
     response.status = 404;
