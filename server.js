@@ -120,15 +120,18 @@ if (savedComment) {
   function upvoteComment(url, request) {
     const id = Number(url.split('/').filter(segment => segment)[1]);
     const requestUser = request.body && request.body.username;
-    const requestComment = database.comments[id]
+    let requestComment = database.comments[id]
     const response = {};
     const downVotedIndex = requestComment.downvotedBy.indexOf(requestUser);
 
     if (requestComment && database.users[requestUser]){
-      const savedComment = upvote(requestComment,requestUser.username);
-      response.body.savedComment;
+      requestComment = upvote(requestComment,requestUser.username);
+      response.body = {comment: requestComment};
       response.status = 200;
+    } else {
+      response.status = 400;
     }
+
     return response;
  }
 
