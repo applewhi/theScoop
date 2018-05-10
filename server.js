@@ -68,10 +68,7 @@ function createComment(url, request){
 
     response.body = {comment: comment};
     response.status = 201;
-
-
   } else {
-
     response.status = 400;
   }
   return response;
@@ -83,7 +80,10 @@ function updateComment(url, request) {
   const requestComment = request.body && request.body.comment;
   const response = {};
 
-  if (!id || !requestComment) {
+  if (!requestComment) {
+    response.status = 400;
+  }
+  else if (!id || !requestComment) {
     response.statust = 200;
   } else if (!savedComment) {
     response.status = 404;
@@ -98,52 +98,75 @@ function updateComment(url, request) {
   return response;
 }
 
+//---------------------DELETE COMMENT FUNCTION--------------------
 function deleteComment(url, request) {
   const id = url.split('/').filter(segment => segment)[1];
   let savedComment = database.comments[id];
   const response = {};
-
-  if (savedComment) {
+  
+  if (!request.body || !request.body.comment) {
+    response.status = 400;
+  }
+  else if (savedComment) {
     savedComment = null;
     const savedCommentIds = database.users[request.body.username].commentIds;
 
-    const userCommentsIds = database.users[savedComment.username].commentIds;
-    userCommentsIds.splice(userComments.indexof(id), 1);
-    const userArticleCommentIds = database.articles[id].commentIds;
+    const userCommentsIds = database.users[savedComment.username].commentIds     
+    userCommentsIds.splice(userCommentsIds.indexof(id), 1);
+    const userArticleCommentIds = database.articles[savedComment.articleId].commentIds;
     userArticleCommentIds.splice(userArticleCommentIds.indexof(id),1);
 
+    response.body = {comment: savedComment};9
     response.status = 204;
-  }
-  else {
-    savedComment = {comment}
+    }
+   else if {  
     response.status = 404;
-  }
+    }
   return response;
 }
 
-function updateUpVote(url, request) {
+function upvoteComment(url, request) {
   const id = url.split('/').filter(segment => segment)[1];
-  const requestComment = request.body && request.body.comment;
+  const requestUser = request.body && request.body.user;
+  const requestComment = database.comment[id]
   const response = {};
-
-  if (id && requestComment.username && requestComment[id]){
-    if (!requestComment.upvoteBy.indexOf(requestComment.username)){
-      requestComment.upvoteBy.push(requestComment.username)
+  const downVotedIndex = requestComment.downvotedBy.indexOf(requestUser);
+  
+  if (database.comment[id] && requestUser && requestUser.username && database.user[requestUser]){ 
+    if (requestComment.upvotedBy.indexOf(requestUser) === -1) {
+      requestComment.upvotedBy.push(requestUser.username);
+      if (downVotedIndex >== 0) {
+        requestComment.downvotedBy.splice(downVotedIndex, 1);
+      }
+      response.status = 200;
+      response.body.requestComment = {comment: requestComment};
     }
-    const downVoteIndex = requestComment.downvoteBy.indexOf(requestComment.username);
-    if (downVoteIndex){
-      requestComment.downvoteBy.splice(downVoteIndex,1)
-    }
-    response.body.comment = {comment: requestComment};
-    response.status = 200;
   } else {
     response.status = 400;
   }
   return response;
 }
 
-function updateDownVote() {
-
+function updateDownVote(url, request) {
+  const id = url.split('/').filter(segment => segment)[1];
+  const requestUser = request.body && request.body.user;
+  const requestComment = database.comment[id]
+  const response = {};
+  const upVotedIndex = requestComment.upvotedBy.indexOf(requestUser);
+  
+  if (database.comment[id] && requestUser && requestUser.username && database.user[requestUser]){ 
+    if (requestComment.downvotedBy.indexOf(requestUser.username) === -1) {
+      requestComment.upvotedBy.push(requestUser.username);
+      if (downVotedIndex >== 0) {
+        requestComment.downvotedBy.splice(downVotedIndex, 1);
+      }
+      response.status = 200;
+      response.body.requestComment = {comment: requestComment};
+    }
+  } else {
+    response.status = 400;
+  }
+  return response;
 }
 
 function getUser(url, request) {
