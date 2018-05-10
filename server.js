@@ -128,11 +128,13 @@ function deleteComment(url, request) {
 function upvoteComment(url, request) {
   const id = url.split('/').filter(segment => segment)[1];
   const requestUser = request.body && request.body.user;
-  const requestComment = database.comment[id]
+  const requestComment = database.comments[id]
   const response = {};
   const downVotedIndex = requestComment.downvotedBy.indexOf(requestUser);
   
-  if (database.comment[id] && requestUser && requestUser.username && database.user[requestUser]){ 
+  /* upvote(requestComment,requestUser.username) */
+  
+  if (database.comment[id] && requestUser && requestUser.username && database.user[requestUser.username]){ 
     if (requestComment.upvotedBy.indexOf(requestUser) === -1) {
       requestComment.upvotedBy.push(requestUser.username);
       if (downVotedIndex >== 0) {
@@ -140,6 +142,7 @@ function upvoteComment(url, request) {
       }
       response.status = 200;
       response.body.requestComment = {comment: requestComment};
+      /* response.body.requestComment = {comment: upvote(requestComment,requestUser.username)} */
     }
   } else {
     response.status = 400;
@@ -150,7 +153,7 @@ function upvoteComment(url, request) {
 function updateDownVote(url, request) {
   const id = url.split('/').filter(segment => segment)[1];
   const requestUser = request.body && request.body.user;
-  const requestComment = database.comment[id]
+  const requestComment = database.comments[id]
   const response = {};
   const upVotedIndex = requestComment.upvotedBy.indexOf(requestUser);
   
