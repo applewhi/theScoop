@@ -101,15 +101,13 @@ function deleteComment(url, request) {
   const response = {};
 
 if (savedComment) {
-    savedComment = null;
-    const savedCommentIds = database.users[request.body.username].commentIds;
+    database.comments[id] = null;
 
     const userCommentsIds = database.users[savedComment.username].commentIds
-    userCommentsIds.splice(userCommentsIds.indexof(id), 1);
+    userCommentsIds.splice(userCommentsIds.indexOf(id), 1);
     const userArticleCommentIds = database.articles[savedComment.articleId].commentIds;
-    userArticleCommentIds.splice(userArticleCommentIds.indexof(id),1);
+    userArticleCommentIds.splice(userArticleCommentIds.indexOf(id),1);
 
-    response.body = {comment: savedComment};
     response.status = 204;
   } else if (!savedComment) {
     response.status = 404;
