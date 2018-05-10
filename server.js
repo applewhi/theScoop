@@ -41,10 +41,20 @@ function createComment(url, request){
   const requestComment = request.body && request.body.comment;
   const response = {};
 
-  if (requestComment && requestComment.username && requestComment.articleId){
+  // function to pretty-print objects...
+  const pp = obj => JSON.stringify(obj, null, 2);
+  console.log(`>>>>>>>> requestComment value: ${pp(requestComment)}`);
+
+  console.log(`>>>>>>>> requestComment value: ${requestComment}`);
+  console.log(`>>>>>>>> requestComment.username value: ${requestComment.username}`);
+  console.log(`>>>>>>>> requestComment.articleId value: ${requestComment.articleId}`);
+
+  if (requestComment && requestComment.body && requestComment.username &&
+    requestComment.articleId && database.articles[requestComment.articleId] &&
+    database.users[requestComment.username]){
     const comment = {
       id: database.nextCommentId++,
-      body: requestComment,
+      body: requestComment.body,
       username: requestComment.username,
       articleId: requestComment.articleId,
       upvotedBy: [],
@@ -54,15 +64,20 @@ function createComment(url, request){
     database.comments[comment.id] = comment;
     database.users[comment.username].commentIds.push(comment.id);
 
-    response.body = {comment: requestComment};
+    database.articles[comment.articleId].commentIds.push(comment.id);
+
+    response.body = {comment: comment};
     response.status = 201;
+
+
   } else {
+
     response.status = 400;
   }
   return response;
 }
 
-function updateComment(URL, request) {
+function updateComment(url, request) {
   const id = Number(url.split('/').filter(segment => segment)[1]);
   const savedComment = database.comments[id];
   const requestComment = request.body && request.body.comment;
@@ -85,7 +100,7 @@ function updateComment(URL, request) {
 
 function deleteComment(url, request) {
   const id = url.split('/').filter(segment => segment)[1];
-  const savedComment = database.comments[id];
+  let savedComment = database.comments[id];
   const response = {};
 
   if (savedComment) {
