@@ -122,10 +122,9 @@ if (savedComment) {
     const requestUser = request.body && request.body.username;
     let requestComment = database.comments[id]
     const response = {};
-    const downVotedIndex = requestComment.downvotedBy.indexOf(requestUser);
 
     if (requestComment && database.users[requestUser]){
-      requestComment = upvote(requestComment,requestUser.username);
+      requestComment = upvote(requestComment,requestUser);
       response.body = {comment: requestComment};
       response.status = 200;
     } else {
@@ -153,22 +152,17 @@ if (savedComment) {
 function downvoteComment(url, request) {
   const id = Number(url.split('/').filter(segment => segment)[1]);
   const requestUser = request.body && request.body.username;
-  const requestComment = database.comments[id]
+  let requestComment = database.comments[id]
   const response = {};
-  const upVotedIndex = requestComment.upvotedBy.indexOf(requestUser);
 
-  if (database.comment[id] && requestUser && database.user[requestUser]){
-    if (requestComment.downvotedBy.indexOf(requestUser) === -1) {
-      requestComment.upvotedBy.push(requestUser);
-      if (downVotedIndex >= 0) {
-        requestComment.downvotedBy.splice(downVotedIndex, 1);
-      }
-      response.status = 200;
-      response.body.requestComment = {comment: requestComment};
-    }
+  if (requestComment && database.users[requestUser]){
+    requestComment = downvote(requestComment,requestUser);
+    response.body = {comment: requestComment};
+    response.status = 200;
   } else {
     response.status = 400;
   }
+
   return response;
 }
 
