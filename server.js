@@ -1,17 +1,21 @@
-
-//saves file to yaml
 var yaml = require('write-yaml');
+yamlLoad = require('js-yaml');
 
-//loads yaml file
-yaml = require('js-yaml');
-fs   = require('fs');
+function loadDatabase(){
+  //saves file to yaml
+}
 
-// Get document, or throw exception on error
-try {
-  var doc = yaml.safeLoad(fs.readFileSync('./server.yml', 'utf8'));
-  console.log(doc);
-} catch (e) {
-  console.log(e);
+function saveDatabase(){
+  //loads yaml file
+  fs   = require('fs');
+
+  // Get document, or throw exception on error
+  try {
+    var doc = yaml.safeLoad(fs.readFileSync('./server.yml', 'utf8'));
+    return doc;
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 // database is let instead of const to allow us to modify it in test.js
