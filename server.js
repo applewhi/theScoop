@@ -1,17 +1,18 @@
 var yaml = require('write-yaml');
-yamlLoad = require('js-yaml');
-
-function loadDatabase(){
-  //saves file to yaml
-}
+var yamlLoad = require('js-yaml');
 
 function saveDatabase(){
+  //saves file to yaml
+  yaml.sync('.server.yml', data);
+}
+
+function loadDatabase(){
   //loads yaml file
   fs   = require('fs');
 
   // Get document, or throw exception on error
   try {
-    var doc = yaml.safeLoad(fs.readFileSync('./server.yml', 'utf8'));
+    var doc = yamlLoadr.safeLoad(fs.readFileSync('./server.yml', 'utf8'));
     return doc;
   } catch (e) {
     console.log(e);
